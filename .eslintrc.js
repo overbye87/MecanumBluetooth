@@ -12,6 +12,7 @@ module.exports = {
         'arrow-body-style': 'off',
         'linebreak-style': 'off',
         'no-unused-vars': 'warn',
+        'react/no-unused-prop-types': 'warn',
         'import/prefer-default-export': 'off',
         'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }],
         'import/extensions': ['error', 'ignorePackages', {

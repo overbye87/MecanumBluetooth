@@ -1,15 +1,14 @@
-/* eslint-disable max-len */
-/* eslint-disable react/no-this-in-sfc */
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert, Button, PermissionsAndroid, Platform, StyleSheet, Text, View,
+  Alert, Button, PermissionsAndroid, StyleSheet, Text, View,
 } from 'react-native';
 import { BleManager, Device } from 'react-native-ble-plx';
+import DeviceCard from './components/DeviceCard';
 
 const manager = new BleManager();
 
-function Main() {
+const Main: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [scannedDevices, setScannedDevices] = useState<Device[]>([]);
 
@@ -44,7 +43,7 @@ function Main() {
   return (
     <View style={styles.сontainer}>
       {scannedDevices.map((device) => (
-        <Text>{device.id}</Text>
+        <DeviceCard device={device} />
       ))}
       {
         isLoading
@@ -57,7 +56,7 @@ function Main() {
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   сontainer: {
