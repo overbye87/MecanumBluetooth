@@ -1,15 +1,16 @@
+/* eslint-disable max-len */
 /* eslint-disable react/no-this-in-sfc */
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert, Button, StyleSheet, Text, View,
+  Alert, Button, PermissionsAndroid, Platform, StyleSheet, Text, View,
 } from 'react-native';
 import { BleManager, Device } from 'react-native-ble-plx';
 
 const manager = new BleManager();
 
 function Main() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [scannedDevices, setScannedDevices] = useState<Device[]>([]);
 
   const scanDevices = () => {
@@ -19,16 +20,26 @@ function Main() {
         Alert.alert(error.name, error.message);
       }
       if (scannedDevice) {
-        if (scannedDevice && !scannedDevices.find((dev) => dev.id === scannedDevice.id)) {
-          setScannedDevices((prev) => [...prev, scannedDevice]);
-        }
+        setScannedDevices((prev) => {
+          if (prev.find((dev) => dev.id === scannedDevice.id)) return prev;
+          return [...prev, scannedDevice];
+        });
       }
     });
     setTimeout(() => {
       manager.stopDeviceScan();
       setIsLoading(false);
-    }, 1000);
+    }, 5000);
   };
+
+  useEffect(() => {
+    (async () => {
+      await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+    })();
+    return () => {
+      manager.destroy();
+    };
+  }, []);
 
   return (
     <View style={styles.сontainer}>
