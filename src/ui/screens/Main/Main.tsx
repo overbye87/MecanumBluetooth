@@ -1,28 +1,31 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
-  ActivityIndicator,
-  Alert, Button, PermissionsAndroid, StyleSheet, Text, View,
+  Alert, PermissionsAndroid, StyleSheet, View,
 } from 'react-native';
-import { BleManager, Device } from 'react-native-ble-plx';
-import DeviceCard from './components/DeviceCard';
+import { BleManager } from 'react-native-ble-plx';
+import { addDevice, clearScannedDevices } from '../../../store/main/mainSlice';
+import { useTypedDispatch } from '../../../store/store';
+import Button from '../../components/Button';
+import { NavigationAppStack } from '../../navigation/AppNavigation';
 
 const manager = new BleManager();
 
 const Main: React.FC = () => {
+  const dispatch = useTypedDispatch();
+  const { navigate } = useNavigation<NavigationAppStack<'Main'>>();
+
   const [isLoading, setIsLoading] = useState(false);
-  const [scannedDevices, setScannedDevices] = useState<Device[]>([]);
 
   const scanDevices = () => {
     setIsLoading(true);
+    navigate('DeviceList');
     manager.startDeviceScan(null, null, (error, scannedDevice) => {
       if (error) {
         Alert.alert(error.name, error.message);
       }
       if (scannedDevice) {
-        setScannedDevices((prev) => {
-          if (prev.find((dev) => dev.id === scannedDevice.id)) return prev;
-          return [...prev, scannedDevice];
-        });
+        dispatch(addDevice(scannedDevice));
       }
     });
     setTimeout(() => {
@@ -42,18 +45,8 @@ const Main: React.FC = () => {
 
   return (
     <View style={styles.сontainer}>
-      {scannedDevices.map((device) => (
-        <DeviceCard device={device} />
-      ))}
-      {
-        isLoading
-          ? <ActivityIndicator size="large" />
-          : <Button title="Scan devices" onPress={scanDevices} />
-      }
-      <Button
-        title="Clear devices"
-        onPress={() => setScannedDevices([])}
-      />
+      <Button title="SCAN DEVICES" onPress={scanDevices} loading={isLoading} />
+      <Button title="CLEAR DEVICES" onPress={() => dispatch(clearScannedDevices())} />
     </View>
   );
 };
@@ -61,9 +54,8 @@ const Main: React.FC = () => {
 const styles = StyleSheet.create({
   сontainer: {
     flex: 1,
-    flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'stretch',
   },
 });
 

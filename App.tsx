@@ -1,12 +1,14 @@
 import React from 'react';
-import { View } from 'react-native';
-import Main from './src/ui/screens/Main/Main';
+import { Provider } from 'react-redux';
+import { store } from './src/store/store';
+
+import AppNavigation from './src/ui/navigation/AppNavigation';
 
 const App: React.FC = () => {
   return (
-    <View style={{ flex: 1 }}>
-      <Main />
-    </View>
+    <Provider store={store}>
+      <AppNavigation />
+    </Provider>
   );
 };
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Device } from 'react-native-ble-plx';
+import { fromBase64, toBase64 } from '../../../../utils/base64';
 
 interface Props {
   device: Device;
@@ -13,7 +14,7 @@ const DeviceCard: React.FC<Props> = ({ device }) => {
     device.isConnected().then(setIsConnected);
   }, [device]);
 
-  const string = device.manufacturerData?.replace(/[=]/g, '');
+  // const string = device.manufacturerData?.replace(/[=]/g, '');
   // const manufacturer = Buffer.from(string || '').toString('base64');
 
   return (
@@ -28,7 +29,7 @@ const DeviceCard: React.FC<Props> = ({ device }) => {
       <Text>{`RSSI : ${device.rssi}`}</Text>
       {/* Decode the ble device manufacturer which is encoded with the base64 algorythme */}
       <Text>
-        {`Manufacturer : ${string}`}
+        {`Manufacturer : ${fromBase64(device.manufacturerData || '')}`}
 
       </Text>
       <Text>{`ServiceData : ${device.serviceData}`}</Text>
