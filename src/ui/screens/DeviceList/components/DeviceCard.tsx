@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { Device } from 'react-native-ble-plx';
+import {
+  Alert,
+  Button, StyleSheet, Text, TouchableOpacity,
+} from 'react-native';
+import { BleError, Device } from 'react-native-ble-plx';
 import { fromBase64, toBase64 } from '../../../../utils/base64';
 
 interface Props {
@@ -10,18 +13,33 @@ const DeviceCard: React.FC<Props> = ({ device }) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // is the device connected?
     device.isConnected().then(setIsConnected);
   }, [device]);
 
   // const string = device.manufacturerData?.replace(/[=]/g, '');
   // const manufacturer = Buffer.from(string || '').toString('base64');
+  const handleConnect = async () => {
+    try {
+      await device.connect();
+      device.discoverAllServicesAndCharacteristics();
+    } catch (error) {
+      Alert.alert('Connect error', JSON.stringify(error, null, 2));
+    }
+  };
+
+  const handleDisconnect = async () => {
+    try {
+      await device.cancelConnection();
+    } catch (error) {
+      Alert.alert((error as Error).name, (error as Error).message);
+    }
+  };
 
   return (
     <TouchableOpacity
       style={styles.container}
     // navigate to the Device Screen
-      // onPress={() => navigation.navigate('Device', { device })}
+      onPress={handleConnect}
     >
       <Text>{`Id : ${device.id}`}</Text>
       <Text>{`Name : ${device.name}`}</Text>
@@ -32,8 +50,10 @@ const DeviceCard: React.FC<Props> = ({ device }) => {
         {`Manufacturer : ${fromBase64(device.manufacturerData || '')}`}
 
       </Text>
-      <Text>{`ServiceData : ${device.serviceData}`}</Text>
+      {Object.entries(device.serviceData || {}).map((item) => <Text>{`uuid: ${item[0]} : ${item[1]}`}</Text>)}
       <Text>{`UUIDS : ${device.serviceUUIDs}`}</Text>
+      <Button title="DISCONNECT" onPress={handleDisconnect} />
+
     </TouchableOpacity>
   );
 };
