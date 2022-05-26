@@ -3,10 +3,12 @@ import { NavigationContainer, RouteProp } from '@react-navigation/native';
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Main from '../screens/Main/Main';
 import { DeviceList } from '../screens/DeviceList/DeviceList';
+import DeviceScreen from '../screens/Device/DeviceScreen';
 
 export type AppStackParamList = {
   Main: undefined,
   DeviceList: undefined,
+  DeviceScreen: { index: number },
 };
 
 type ScreenKeys = keyof AppStackParamList;
@@ -30,6 +32,10 @@ const AppNavigation: React.FC = () => {
         <AppStack.Screen
           name="DeviceList"
           component={DeviceList}
+        />
+        <AppStack.Screen
+          name="DeviceScreen"
+          component={DeviceScreen}
         />
       </AppStack.Navigator>
     </NavigationContainer>

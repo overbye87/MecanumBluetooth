@@ -5,5 +5,5 @@ export function toBase64(input: string) {
 }
 
 export function fromBase64(encoded: string) {
-  return Buffer.from(encoded, 'base64').toString('hex');
+  return Buffer.from(encoded, 'base64').toString('utf-8');
 }

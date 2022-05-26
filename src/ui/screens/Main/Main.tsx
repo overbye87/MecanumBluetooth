@@ -45,6 +45,7 @@ const Main: React.FC = () => {
 
   return (
     <View style={styles.сontainer}>
+      <Button title="DEVICE LIST" onPress={() => navigate('DeviceList')} />
       <Button title="SCAN DEVICES" onPress={scanDevices} loading={isLoading} />
       <Button title="CLEAR DEVICES" onPress={() => dispatch(clearScannedDevices())} />
     </View>

@@ -23,6 +23,9 @@ export const mainSlice = createSlice({
         store.scannedDevices.push(scannedDevice);
       }
     },
+    updateDevice: (store, action: PayloadAction<{ device: Device, index: number }>) => {
+      store.scannedDevices[action.payload.index] = action.payload.device;
+    },
     clearScannedDevices: (store) => {
       store.scannedDevices = [];
     },
@@ -34,6 +37,7 @@ export const mainSlice = createSlice({
 
 export const {
   addDevice,
+  updateDevice,
   clearScannedDevices,
   setSelectedDevice,
 } = mainSlice.actions;

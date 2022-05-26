@@ -1,19 +1,16 @@
 import React from 'react';
-import { FlatList, Text, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTypedDispatch, useTypedSelector } from '../../../store/store';
-import { NavigationAppStack } from '../../navigation/AppNavigation';
+import { FlatList, View } from 'react-native';
+
+import { useTypedSelector } from '../../../store/store';
 import DeviceCard from './components/DeviceCard';
 
-export const DeviceList = () => {
+export const DeviceList: React.FC = () => {
   const scannedDevices = useTypedSelector(({ main }) => main.scannedDevices);
-  const dispatch = useTypedDispatch();
-  const { navigate } = useNavigation<NavigationAppStack<'Main'>>();
   return (
     <View>
       <FlatList
         data={scannedDevices}
-        renderItem={({ item }) => <DeviceCard device={item} />}
+        renderItem={({ item, index }) => <DeviceCard device={item} index={index} />}
         keyExtractor={(item) => item.id}
       />
     </View>
