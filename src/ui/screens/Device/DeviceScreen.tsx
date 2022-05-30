@@ -7,9 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { BleError, NativeBleError, Service } from 'react-native-ble-plx';
-import { Buffer } from 'buffer';
-import { updateDevice } from '../../../store/main/mainSlice';
+import { BleError, Service } from 'react-native-ble-plx';
 import { useTypedDispatch, useTypedSelector } from '../../../store/store';
 import Button from '../../components/Button';
 import { RouteAppStack } from '../../navigation/AppNavigation';
@@ -50,7 +48,6 @@ const DeviceScreen: React.FC = () => {
     } catch (error) {
       const { reason, message } = error as BleError;
       Alert.alert(message, reason as string);
-      // Alert.alert('Connect error', JSON.stringify(error, null, 2));
     }
     setIsLoading(false);
   };
@@ -61,7 +58,8 @@ const DeviceScreen: React.FC = () => {
       const resultCancel = await device.cancelConnection();
       // dispatch(updateDevice({ device: resultCancel, index }));
     } catch (error) {
-      Alert.alert((error as any).message, (error as any).reason);
+      const { reason, message } = error as BleError;
+      Alert.alert(message, reason as string);
     }
     setIsLoading(false);
   };
@@ -93,7 +91,8 @@ const DeviceScreen: React.FC = () => {
 
       Alert.alert('writeCharacteristic', JSON.stringify(result, null, 2));
     } catch (error) {
-      Alert.alert((error as any).name, (error as any).message);
+      const { reason, message } = error as BleError;
+      Alert.alert(message, reason as string);
     }
   };
 

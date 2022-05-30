@@ -4,11 +4,13 @@ import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-na
 import Main from '../screens/Main/Main';
 import { DeviceList } from '../screens/DeviceList/DeviceList';
 import DeviceScreen from '../screens/Device/DeviceScreen';
+import Joystick from '../screens/Joystick/Joystick';
 
 export type AppStackParamList = {
   Main: undefined,
   DeviceList: undefined,
   DeviceScreen: { index: number },
+  Joystick: undefined,
 };
 
 type ScreenKeys = keyof AppStackParamList;
@@ -36,6 +38,11 @@ const AppNavigation: React.FC = () => {
         <AppStack.Screen
           name="DeviceScreen"
           component={DeviceScreen}
+        />
+        <AppStack.Screen
+          name="Joystick"
+          component={Joystick}
+          options={{ headerShown: false }}
         />
       </AppStack.Navigator>
     </NavigationContainer>
