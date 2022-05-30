@@ -48,8 +48,9 @@ const DeviceScreen: React.FC = () => {
       // Alert.alert('characteristics', JSON.stringify(char, null, 2));
       // dispatch(updateDevice({ device: resultDiscover, index }));
     } catch (error) {
+      const { reason, message } = error as BleError;
+      Alert.alert(message, reason as string);
       // Alert.alert('Connect error', JSON.stringify(error, null, 2));
-      Alert.alert((error as any).message, (error as any).reason);
     }
     setIsLoading(false);
   };
@@ -84,8 +85,11 @@ const DeviceScreen: React.FC = () => {
       const message1 = 'aGVsbG8gbWlzcyB0YXBweQ==';
       // const message = toBase64('hello my dear freand');
       const message = toBase64(`${text}\r\n`);
-      const result = await
-      device.writeCharacteristicWithResponseForService(serviceUUIDs, offei, message);
+      const result = await device.writeCharacteristicWithResponseForService(
+        serviceUUIDs,
+        offei,
+        message,
+      );
 
       Alert.alert('writeCharacteristic', JSON.stringify(result, null, 2));
     } catch (error) {
