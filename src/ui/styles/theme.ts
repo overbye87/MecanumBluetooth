@@ -3,5 +3,7 @@ export const theme = {
   colours: {
     button: '#2196F3',
     buttonText: 'white',
+    red: '#FF2400',
+    gray: 'darkgray',
   },
 };

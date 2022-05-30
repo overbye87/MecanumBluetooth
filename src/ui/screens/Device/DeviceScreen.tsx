@@ -1,7 +1,11 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import { useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
-  Alert, StyleSheet, Text, View,
+  Alert,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 import { BleError, NativeBleError, Service } from 'react-native-ble-plx';
 import { Buffer } from 'buffer';
@@ -10,6 +14,7 @@ import { useTypedDispatch, useTypedSelector } from '../../../store/store';
 import Button from '../../components/Button';
 import { RouteAppStack } from '../../navigation/AppNavigation';
 import { toBase64 } from '../../../utils/base64';
+import TextInput from '../../components/TextInput';
 
 const DeviceScreen: React.FC = () => {
   const { params } = useRoute<RouteAppStack<'DeviceScreen'>>();
@@ -19,6 +24,7 @@ const DeviceScreen: React.FC = () => {
   const dispatch = useTypedDispatch();
   const [isConnected, setIsConnected] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [text, setText] = useState('Hello miss pacman!');
   const [sevices, setSevices] = useState<Service[]>([]);
 
   useEffect(() => {
@@ -76,7 +82,8 @@ const DeviceScreen: React.FC = () => {
       // Alert.alert(connactedDevice);
       const characteristicUUID = 'AAAAAA==';
       const message1 = 'aGVsbG8gbWlzcyB0YXBweQ==';
-      const message = toBase64('hello my dear freand');
+      // const message = toBase64('hello my dear freand');
+      const message = toBase64(`${text}\r\n`);
       const result = await
       device.writeCharacteristicWithResponseForService(serviceUUIDs, offei, message);
 
@@ -113,8 +120,14 @@ const DeviceScreen: React.FC = () => {
         <Text key={item.uuid}>{`${item.id}: ${item.uuid}`}</Text>
       ))}
       <Text>===</Text>
-      <Button title="CONNECT" onPress={handleConnect} loading={isLoading} />
-      <Button title="DISCONNECT" onPress={handleDisconnect} loading={isLoading} />
+      <View style={styles.buttonContainer}>
+        <Button title="CONNECT" onPress={handleConnect} loading={isLoading} disabled={isConnected} />
+        <Button title="DISCONNECT" onPress={handleDisconnect} loading={isLoading} />
+      </View>
+      <TextInput
+        value={text}
+        onChangeText={(text) => setText(text)}
+      />
       <Button title="SEND" onPress={handleSend} loading={isLoading} />
     </View>
 
@@ -124,6 +137,10 @@ const DeviceScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
 });
 

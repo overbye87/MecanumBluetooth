@@ -26,7 +26,7 @@ const MenuButton: React.FC<Props> = ({
   return (
     <TouchableOpacity
       disabled={disabled}
-      style={[styles.button, style]}
+      style={[styles.button, style, disabled && styles.disabled]}
       onPress={onPress}
     >
       {children}
@@ -54,6 +54,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 5,
+    minWidth: 150,
+  },
+  disabled: {
+    backgroundColor: theme.colours.gray,
   },
   text: {
     color: theme.colours.buttonText,

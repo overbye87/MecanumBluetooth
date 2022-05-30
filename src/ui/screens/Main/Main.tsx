@@ -1,17 +1,18 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
-  Alert, PermissionsAndroid, StyleSheet, View,
+  Alert, PermissionsAndroid, StyleSheet, Text, View,
 } from 'react-native';
 import { BleManager } from 'react-native-ble-plx';
 import { addDevice, clearScannedDevices } from '../../../store/main/mainSlice';
-import { useTypedDispatch } from '../../../store/store';
+import { useTypedDispatch, useTypedSelector } from '../../../store/store';
 import Button from '../../components/Button';
 import { NavigationAppStack } from '../../navigation/AppNavigation';
 
 const manager = new BleManager();
 
 const Main: React.FC = () => {
+  const scannedDevices = useTypedSelector(({ main }) => main.scannedDevices);
   const dispatch = useTypedDispatch();
   const { navigate } = useNavigation<NavigationAppStack<'Main'>>();
 
@@ -45,7 +46,7 @@ const Main: React.FC = () => {
 
   return (
     <View style={styles.сontainer}>
-      <Button title="DEVICE LIST" onPress={() => navigate('DeviceList')} />
+      <Button title="DEVICE LIST" onPress={() => navigate('DeviceList')} disabled={!scannedDevices.length} />
       <Button title="SCAN DEVICES" onPress={scanDevices} loading={isLoading} />
       <Button title="CLEAR DEVICES" onPress={() => dispatch(clearScannedDevices())} />
     </View>
