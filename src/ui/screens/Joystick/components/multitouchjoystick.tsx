@@ -1,7 +1,7 @@
-/* eslint-disable no-mixed-operators */
 import React, { memo } from 'react';
-import { View } from 'react-native';
-import Animated, {
+import { StyleSheet, View } from 'react-native';
+import Animated,
+{
   runOnJS,
   useAnimatedGestureHandler,
   useAnimatedStyle,
@@ -9,7 +9,11 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-import { GestureHandlerRootView, PanGestureHandler, PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
+import {
+  GestureHandlerRootView,
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from 'react-native-gesture-handler';
 
 interface propsJoystick {
   width?: number;
@@ -20,28 +24,18 @@ interface propsJoystick {
   onValue: (x: number, y: number) => void;
 }
 
-MultiTouchJoyStick.defaultProps = {
-  backgroundColor: 'darkgray',
-  ballColor: '#2196F3',
-  ballRadius: 30,
-  height: 200,
-  width: 200,
-};
-
-function MultiTouchJoyStick({
+const MultiTouchJoyStick: React.FC<propsJoystick> = ({
   backgroundColor,
   ballColor,
   ballRadius,
   height,
   width,
   onValue,
-}: propsJoystick) {
+}) => {
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
-
   const panGestureEvent = useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
-    onStart: () => { },
-
+    onStart: () => null,
     onActive: (event) => {
       if (width && height) {
         if (event.translationX < width / 2 && event.translationX > -width / 2) {
@@ -51,8 +45,8 @@ function MultiTouchJoyStick({
           translateY.value = event.translationY;
         }
         runOnJS(onValue)(
-          Number((translateX.value / width * 2).toFixed(2)),
-          Number((translateY.value / height * 2).toFixed(2)),
+          Number(((translateX.value / width) * 2).toFixed(2)),
+          Number(-((translateY.value / height) * 2).toFixed(2)),
         );
       }
     },
@@ -105,6 +99,23 @@ function MultiTouchJoyStick({
       </GestureHandlerRootView>
     </View>
   );
-}
+};
+
+MultiTouchJoyStick.defaultProps = {
+  backgroundColor: 'darkgray',
+  ballColor: '#2196F3',
+  ballRadius: 30,
+  height: 200,
+  width: 200,
+};
+
+const styles = StyleSheet.create({
+  сontainer: {
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+});
 
 export default memo(MultiTouchJoyStick);

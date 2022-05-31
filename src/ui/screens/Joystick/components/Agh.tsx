@@ -8,7 +8,7 @@ import Animated, {
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
 
-function App() {
+function Agh() {
   const x = useSharedValue(0);
 
   const gestureHandler = useAnimatedGestureHandler({
@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default Agh;
