@@ -9,7 +9,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-import { PanGestureHandler, PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
+import { GestureHandlerRootView, PanGestureHandler, PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
 
 interface propsJoystick {
   width?: number;
@@ -17,12 +17,12 @@ interface propsJoystick {
   ballRadius?: number;
   backgroundColor?: string;
   ballColor?: string;
-  onValue: (x: number, y: number) => {};
+  onValue: (x: number, y: number) => void;
 }
 
 MultiTouchJoyStick.defaultProps = {
-  backgroundColor: '#f5f5f5',
-  ballColor: 'rgba(0, 0, 256, 0.5)',
+  backgroundColor: 'darkgray',
+  ballColor: '#2196F3',
   ballRadius: 30,
   height: 200,
   width: 200,
@@ -88,19 +88,21 @@ function MultiTouchJoyStick({
         borderRadius: 180,
       }}
     >
-      <PanGestureHandler onGestureEvent={panGestureEvent}>
-        <Animated.View
-          style={[
-            {
-              width: ballRadius ? ballRadius * 2 : 30,
-              height: ballRadius ? ballRadius * 2 : 30,
-              backgroundColor: ballColor,
-              borderRadius: 180,
-            },
-            rStyle,
-          ]}
-        />
-      </PanGestureHandler>
+      <GestureHandlerRootView>
+        <PanGestureHandler onGestureEvent={panGestureEvent}>
+          <Animated.View
+            style={[
+              {
+                width: ballRadius ? ballRadius * 2 : 30,
+                height: ballRadius ? ballRadius * 2 : 30,
+                backgroundColor: ballColor,
+                borderRadius: 180,
+              },
+              rStyle,
+            ]}
+          />
+        </PanGestureHandler>
+      </GestureHandlerRootView>
     </View>
   );
 }

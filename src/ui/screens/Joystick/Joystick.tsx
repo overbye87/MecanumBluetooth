@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Joystick from './components/multitouchjoystick';
 
 const JoystickScreen: React.FC = () => {
@@ -25,9 +25,10 @@ const JoystickScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   сontainer: {
+    flexDirection: 'row',
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'stretch',
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
 });
 
