@@ -1,18 +1,21 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
-  Alert, PermissionsAndroid, StyleSheet, Text, View,
+  Alert, PermissionsAndroid, StyleSheet, View,
 } from 'react-native';
 import { BleManager } from 'react-native-ble-plx';
 import { addDevice, clearScannedDevices } from '../../../store/main/mainSlice';
 import { useTypedDispatch, useTypedSelector } from '../../../store/store';
 import Button from '../../components/Button';
 import { NavigationAppStack } from '../../navigation/AppNavigation';
+import SelectedDevice from './components/SelectedDevice';
 
 const manager = new BleManager();
 
 const Main: React.FC = () => {
   const scannedDevices = useTypedSelector(({ main }) => main.scannedDevices);
+  const selectedDeviceIndex = useTypedSelector(({ main }) => main.selectedDeviceIndex);
+
   const dispatch = useTypedDispatch();
   const { navigate } = useNavigation<NavigationAppStack<'Main'>>();
 
@@ -46,8 +49,9 @@ const Main: React.FC = () => {
 
   return (
     <View style={styles.сontainer}>
+      {selectedDeviceIndex && <SelectedDevice device={scannedDevices[selectedDeviceIndex]} />}
       <Button title="JOYSTICK" onPress={() => navigate('Joystick')} />
-      <Button title="DEVICE LIST" onPress={() => navigate('DeviceList')} disabled={!scannedDevices.length} />
+      <Button title={`DEVICE LIST (${scannedDevices.length})`} onPress={() => navigate('DeviceList')} disabled={!scannedDevices.length} />
       <Button title="SCAN DEVICES" onPress={scanDevices} loading={isLoading} />
       <Button title="CLEAR DEVICES" onPress={() => dispatch(clearScannedDevices())} />
     </View>

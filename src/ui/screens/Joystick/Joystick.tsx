@@ -1,28 +1,108 @@
-import React, { useRef } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  ActivityIndicator, Alert, StyleSheet, View,
+} from 'react-native';
+import { BleError, Device } from 'react-native-ble-plx';
+import { useTypedSelector } from '../../../store/store';
+import { toBase64 } from '../../../utils/base64';
 import MultiTouchJoyStick from './components/MultiTouchJoyStick';
 
-const Joystick: React.FC = () => {
-  const x1 = useRef<number>(0);
-  const y1 = useRef<number>(0);
-  const x2 = useRef<number>(0);
-  const y2 = useRef<number>(0);
+const interval = 50; // ms
+const scaleFactor = 60; // maximum position value
 
-  console.log('render');
+interface IPosition {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}
+
+const Joystick: React.FC = () => {
+  const [isConnected, setIsConnected] = useState(false);
+  const scannedDevices = useTypedSelector(({ main }) => main.scannedDevices);
+  const selectedDeviceIndex = useTypedSelector(({ main }) => main.selectedDeviceIndex);
+
+  const position = useRef<IPosition>({
+    x1: 0, y1: 0, x2: 0, y2: 0,
+  });
+  const prevPosition = useRef<IPosition>({
+    x1: 0, y1: 0, x2: 0, y2: 0,
+  });
+
+  const tick = () => {
+    if (JSON.stringify(position.current) !== JSON.stringify(prevPosition.current)) {
+      const message = `$${position.current.x1} ${position.current.y1};${position.current.x2}@${position.current.y2}!`;
+      console.log(message);
+      // console.log('curr ', position.current);
+      // console.log('prev ', prevPosition.current);
+      prevPosition.current.x1 = position.current.x1;
+      prevPosition.current.y1 = position.current.y1;
+      prevPosition.current.x2 = position.current.x2;
+      prevPosition.current.y2 = position.current.y2;
+      if (selectedDeviceIndex && isConnected) {
+        send(scannedDevices[selectedDeviceIndex], message);
+      }
+    }
+  };
+
+  const connect = async (device: Device) => {
+    try {
+      await device.connect();
+      setIsConnected(await device.isConnected());
+    } catch (error) {
+      const { reason, message } = error as BleError;
+      Alert.alert(message, reason as string);
+    }
+  };
+
+  const send = async (device: Device, text: string) => {
+    try {
+      const message = toBase64(`${text}\r\n`);
+      const serviceUUIDs = '0000ffe0-0000-1000-8000-00805f9b34fb';
+      const offei = '0000ffe1-0000-1000-8000-00805f9b34fb';
+      await device.writeCharacteristicWithoutResponseForService(
+        serviceUUIDs,
+        offei,
+        message,
+      );
+    } catch (error) {
+      const { reason, message } = error as BleError;
+      Alert.alert(message, reason as string);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedDeviceIndex) {
+      connect(scannedDevices[selectedDeviceIndex]);
+    }
+    const timerInterval = setInterval(tick, interval);
+    return (() => {
+      clearInterval(timerInterval);
+    });
+  }, []);
+
+  console.log('render Joystick');
 
   return (
     <View
       style={styles.сontainer}
     >
       <MultiTouchJoyStick
-        onValue={React.useCallback((x, y) => {
-          setPositions((prev: any) => ({ ...prev, x1: x, y1: y }));
-        }, [setPositions])}
+        onValue={(x, y) => {
+          prevPosition.current.x1 = position.current.x1;
+          prevPosition.current.y1 = position.current.y1;
+          position.current.x1 = Math.round(x * scaleFactor);
+          position.current.y1 = Math.round(y * scaleFactor);
+        }}
       />
+      {!isConnected && <ActivityIndicator size="large" />}
       <MultiTouchJoyStick
-        onValue={React.useCallback((x, y) => {
-          setPositions((prev: any) => ({ ...prev, x2: x, y2: y }));
-        }, [setPositions])}
+        onValue={(x, y) => {
+          prevPosition.current.x2 = position.current.x2;
+          prevPosition.current.y2 = position.current.y2;
+          position.current.x2 = Math.round(x * scaleFactor);
+          position.current.y2 = Math.round(y * scaleFactor);
+        }}
       />
     </View>
   );

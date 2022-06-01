@@ -5,12 +5,12 @@ import { RootState } from '../store';
 
 interface IInitial {
   scannedDevices: Device[],
-  selectedDevice: Device | null,
+  selectedDeviceIndex: number | null,
 }
 
 const initialState: IInitial = {
   scannedDevices: [],
-  selectedDevice: null,
+  selectedDeviceIndex: null,
 };
 
 export const mainSlice = createSlice({
@@ -28,9 +28,10 @@ export const mainSlice = createSlice({
     },
     clearScannedDevices: (store) => {
       store.scannedDevices = [];
+      store.selectedDeviceIndex = null;
     },
-    setSelectedDevice: (store, action: PayloadAction<Device>) => {
-      store.selectedDevice = action.payload;
+    setSelectedDeviceIndex: (store, action: PayloadAction<number>) => {
+      store.selectedDeviceIndex = action.payload;
     },
   },
 });
@@ -39,7 +40,7 @@ export const {
   addDevice,
   updateDevice,
   clearScannedDevices,
-  setSelectedDevice,
+  setSelectedDeviceIndex,
 } = mainSlice.actions;
 
 export const main = (state: RootState) => state.main;

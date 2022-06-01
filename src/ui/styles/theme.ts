@@ -5,5 +5,6 @@ export const theme = {
     buttonText: 'white',
     red: '#FF2400',
     gray: 'darkgray',
+    green: '#77dd77',
   },
 };

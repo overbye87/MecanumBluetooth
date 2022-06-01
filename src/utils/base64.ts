@@ -7,3 +7,7 @@ export function toBase64(input: string) {
 export function fromBase64(encoded: string) {
   return Buffer.from(encoded, 'base64').toString('utf-8');
 }
+
+export const base64ToHex = (str: string) => {
+  return Buffer.from(str, 'base64').toString('hex');
+};
