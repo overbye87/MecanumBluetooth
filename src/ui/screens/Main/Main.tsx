@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
@@ -49,7 +50,7 @@ const Main: React.FC = () => {
 
   return (
     <View style={styles.сontainer}>
-      {selectedDeviceIndex && <SelectedDevice device={scannedDevices[selectedDeviceIndex]} />}
+      {Boolean(selectedDeviceIndex) && <SelectedDevice device={scannedDevices[selectedDeviceIndex]} />}
       <Button title="JOYSTICK" onPress={() => navigate('Joystick')} />
       <Button title={`DEVICE LIST (${scannedDevices.length})`} onPress={() => navigate('DeviceList')} disabled={!scannedDevices.length} />
       <Button title="SCAN DEVICES" onPress={scanDevices} loading={isLoading} />

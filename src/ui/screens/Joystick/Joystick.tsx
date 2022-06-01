@@ -29,35 +29,10 @@ const Joystick: React.FC = () => {
     x1: 0, y1: 0, x2: 0, y2: 0,
   });
 
-  const tick = () => {
-    if (JSON.stringify(position.current) !== JSON.stringify(prevPosition.current)) {
-      const message = `$${position.current.x1} ${position.current.y1};${position.current.x2}@${position.current.y2}!`;
-      console.log(message);
-      // console.log('curr ', position.current);
-      // console.log('prev ', prevPosition.current);
-      prevPosition.current.x1 = position.current.x1;
-      prevPosition.current.y1 = position.current.y1;
-      prevPosition.current.x2 = position.current.x2;
-      prevPosition.current.y2 = position.current.y2;
-      if (selectedDeviceIndex && isConnected) {
-        send(scannedDevices[selectedDeviceIndex], message);
-      }
-    }
-  };
-
-  const connect = async (device: Device) => {
-    try {
-      await device.connect();
-      setIsConnected(await device.isConnected());
-    } catch (error) {
-      const { reason, message } = error as BleError;
-      Alert.alert(message, reason as string);
-    }
-  };
-
   const send = async (device: Device, text: string) => {
     try {
-      const message = toBase64(`${text}\r\n`);
+      // const message = toBase64(`${text}\r\n`);
+      const message = toBase64(`${text}`);
       const serviceUUIDs = '0000ffe0-0000-1000-8000-00805f9b34fb';
       const offei = '0000ffe1-0000-1000-8000-00805f9b34fb';
       await device.writeCharacteristicWithoutResponseForService(
@@ -65,6 +40,37 @@ const Joystick: React.FC = () => {
         offei,
         message,
       );
+      console.log(message);
+    } catch (error) {
+      const { reason, message } = error as BleError;
+      Alert.alert(message, reason as string);
+    }
+  };
+
+  const tick = () => {
+    if (JSON.stringify(position.current) !== JSON.stringify(prevPosition.current)) {
+      const message = `$${position.current.x1} ${position.current.y1};${position.current.x2}@${position.current.y2}!`;
+      console.log(message);
+      prevPosition.current.x1 = position.current.x1;
+      prevPosition.current.y1 = position.current.y1;
+      prevPosition.current.x2 = position.current.x2;
+      prevPosition.current.y2 = position.current.y2;
+      console.log('isConnected', isConnected);
+      if ((selectedDeviceIndex !== null)) {
+        send(scannedDevices[selectedDeviceIndex], message);
+      }
+    }
+  };
+
+  const connect = async (device: Device) => {
+    try {
+      if (!await device.isConnected()) {
+        await device.connect();
+      }
+      const result = await device.discoverAllServicesAndCharacteristics();
+      // Alert.alert('discoverAllServicesAndCharacteristics', JSON.stringify(result.name, null, 2));
+      console.log('connacted', await device.isConnected());
+      setIsConnected(true);
     } catch (error) {
       const { reason, message } = error as BleError;
       Alert.alert(message, reason as string);
@@ -72,7 +78,8 @@ const Joystick: React.FC = () => {
   };
 
   useEffect(() => {
-    if (selectedDeviceIndex) {
+    console.log(selectedDeviceIndex);
+    if (selectedDeviceIndex !== null) {
       connect(scannedDevices[selectedDeviceIndex]);
     }
     const timerInterval = setInterval(tick, interval);
