@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import Animated,
 {
   runOnJS,
@@ -38,10 +38,10 @@ const MultiTouchJoyStick: React.FC<propsJoystick> = ({
     onStart: () => null,
     onActive: (event) => {
       if (width && height) {
-        if (event.translationX < width / 2 && event.translationX > -width / 2) {
+        if (event.translationX < (width / 2) && event.translationX > -(width / 2)) {
           translateX.value = event.translationX;
         }
-        if (event.translationY < height / 2 && event.translationY > -height / 2) {
+        if (event.translationY < (height / 2) && event.translationY > -(height / 2)) {
           translateY.value = event.translationY;
         }
         runOnJS(onValue)(
@@ -108,14 +108,5 @@ MultiTouchJoyStick.defaultProps = {
   height: 200,
   width: 200,
 };
-
-const styles = StyleSheet.create({
-  сontainer: {
-    flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-});
 
 export default memo(MultiTouchJoyStick);

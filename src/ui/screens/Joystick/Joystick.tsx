@@ -1,34 +1,28 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Joystick from './components/multitouchjoystick';
+import MultiTouchJoyStick from './components/MultiTouchJoyStick';
 
-const handleOnValue = (x1?: number, y1?: number, x2?: number, y2?: number) => {
-  const prevX1 = x1;
-  const prevY1 = y1;
-  const prevX2 = x2;
-  const prevY2 = y2;
-  if (!x1 && !y1) console.log(`$${prevX1} ${prevY1};${x2}@${y2}!`);
-  if (!x2 && !y2) console.log(`$${x1} ${y1};${prevX2}@${prevY2}!`);
-  // console.log(`$${x1} ${y1};${x2}@${y2}!`);
-};
+const Joystick: React.FC = () => {
+  const x1 = useRef<number>(0);
+  const y1 = useRef<number>(0);
+  const x2 = useRef<number>(0);
+  const y2 = useRef<number>(0);
 
-const JoystickScreen: React.FC = () => {
   console.log('render');
+
   return (
     <View
       style={styles.сontainer}
     >
-      <Joystick
-        onValue={(x, y) => {
-          handleOnValue(x, y);
-          // console.log(x, y);
-        }}
+      <MultiTouchJoyStick
+        onValue={React.useCallback((x, y) => {
+          setPositions((prev: any) => ({ ...prev, x1: x, y1: y }));
+        }, [setPositions])}
       />
-      <Joystick
-        onValue={(x, y) => {
-          handleOnValue(undefined, undefined, x, y);
-          // console.log(x, y);
-        }}
+      <MultiTouchJoyStick
+        onValue={React.useCallback((x, y) => {
+          setPositions((prev: any) => ({ ...prev, x2: x, y2: y }));
+        }, [setPositions])}
       />
     </View>
   );
@@ -43,4 +37,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default JoystickScreen;
+export default Joystick;
