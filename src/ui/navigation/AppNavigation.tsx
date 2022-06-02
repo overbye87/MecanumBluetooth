@@ -29,20 +29,22 @@ const AppNavigation: React.FC = () => {
         <AppStack.Screen
           name="Main"
           component={Main}
-          options={{ headerShown: false }}
+          options={{ headerShown: false, orientation: 'portrait_up' }}
         />
         <AppStack.Screen
           name="DeviceList"
           component={DeviceList}
+          options={{ orientation: 'portrait_up' }}
         />
         <AppStack.Screen
           name="DeviceScreen"
           component={DeviceScreen}
+          options={{ orientation: 'portrait_up' }}
         />
         <AppStack.Screen
           name="Joystick"
           component={Joystick}
-          options={{ headerShown: false }}
+          options={{ headerShown: false, orientation: 'landscape', statusBarHidden: true }}
         />
       </AppStack.Navigator>
     </NavigationContainer>

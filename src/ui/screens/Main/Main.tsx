@@ -10,6 +10,7 @@ import { useTypedDispatch, useTypedSelector } from '../../../store/store';
 import Button from '../../components/Button';
 import { NavigationAppStack } from '../../navigation/AppNavigation';
 import SelectedDevice from './components/SelectedDevice';
+import BluetoothLogo from '../../../assets/bluetooth-svgrepo-com.svg';
 
 const manager = new BleManager();
 
@@ -44,13 +45,15 @@ const Main: React.FC = () => {
       await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
     })();
     return () => {
-      manager.destroy();
+      // console.log('manager.destroy');
+      // manager.destroy();
     };
   }, []);
 
   return (
     <View style={styles.сontainer}>
-      {Boolean(selectedDeviceIndex) && <SelectedDevice device={scannedDevices[selectedDeviceIndex]} />}
+      <BluetoothLogo style={styles.logo} width={120} height={120} />
+      {(selectedDeviceIndex !== null) && <SelectedDevice device={scannedDevices[selectedDeviceIndex]} />}
       <Button title="JOYSTICK" onPress={() => navigate('Joystick')} />
       <Button title={`DEVICE LIST (${scannedDevices.length})`} onPress={() => navigate('DeviceList')} disabled={!scannedDevices.length} />
       <Button title="SCAN DEVICES" onPress={scanDevices} loading={isLoading} />
@@ -64,6 +67,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'stretch',
+  },
+  logo: {
+    alignSelf: 'center',
+    margin: 20,
   },
 });
 

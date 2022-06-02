@@ -14,6 +14,8 @@ import { RouteAppStack } from '../../navigation/AppNavigation';
 import { base64ToHex, fromBase64, toBase64 } from '../../../utils/base64';
 import TextInput from '../../components/TextInput';
 import { setSelectedDeviceIndex } from '../../../store/main/mainSlice';
+import ConnactedLogo from '../../../assets/link-svgrepo-com.svg';
+import { theme } from '../../styles/theme';
 
 const DeviceScreen: React.FC = () => {
   const { params } = useRoute<RouteAppStack<'DeviceScreen'>>();
@@ -39,6 +41,7 @@ const DeviceScreen: React.FC = () => {
     try {
       setIsLoading(true);
       const resultConnect = await device.connect();
+      setIsConnected(await device.isConnected());
       // dispatch(updateDevice({ device: resultConnect, index }));
       // const resultDiscover = await device.discoverAllServicesAndCharacteristics();
       // const result = await device.services();
@@ -58,6 +61,7 @@ const DeviceScreen: React.FC = () => {
     try {
       setIsLoading(true);
       const resultCancel = await device.cancelConnection();
+      setIsConnected(await device.isConnected());
       // dispatch(updateDevice({ device: resultCancel, index }));
     } catch (error) {
       const { reason, message } = error as BleError;
@@ -111,27 +115,28 @@ const DeviceScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text>Device</Text>
-      <Text>{`Id : ${device.id}`}</Text>
-      <Text>{`Name : ${device.name}`}</Text>
-      <Text>{`Is connected : ${isConnected}`}</Text>
-      <Text>{`RSSI : ${device.rssi}`}</Text>
-      {/* Decode the ble device manufacturer which is encoded with the base64 algorythme */}
-      <Text>{`Manufacturer : ${base64ToHex(device.manufacturerData || '')}`}</Text>
-      {device.serviceData && Object.entries(device.serviceData).map((item) => (
-        <Text key={item[0]}>{`uuid: ${item[0]} : ${item[1]}`}</Text>
-      ))}
-      {device.serviceUUIDs && device.serviceUUIDs.map((item) => (
-        <Text key={item}>{`UUIDS : ${item}`}</Text>
-      ))}
-      {Boolean(sevices.length) && <Text>Services:</Text>}
-      {sevices.map((item) => (
-        <Text key={item.uuid}>{`${item.id}: ${item.uuid}`}</Text>
-      ))}
+      <View style={styles.textContainer}>
+        <Text style={styles.id}>{`${device.id}`}</Text>
+        <Text style={styles.name}>{`${device.name}`}</Text>
+        <Text style={styles.rssi}>{`RSSI : ${device.rssi}`}</Text>
+        {isConnected && <ConnactedLogo width={60} height={60} style={{ position: 'absolute', top: 10, right: 10 }} />}
+        {/* Decode the ble device manufacturer which is encoded with the base64 algorythme */}
+        <Text>{`Manufacturer : ${base64ToHex(device.manufacturerData || '')}`}</Text>
+        {device.serviceData && Object.entries(device.serviceData).map((item) => (
+          <Text key={item[0]}>{`uuid: ${item[0]} : ${item[1]}`}</Text>
+        ))}
+        {device.serviceUUIDs && device.serviceUUIDs.map((item) => (
+          <Text key={item}>{`UUIDS : ${item}`}</Text>
+        ))}
+        {Boolean(sevices.length) && <Text>Services:</Text>}
+        {sevices.map((item) => (
+          <Text key={item.uuid}>{`${item.id}: ${item.uuid}`}</Text>
+        ))}
+      </View>
       <Button title="SELECT" onPress={handleSelect} loading={isLoading} disabled={selectedDeviceIndex === index} />
       <View style={styles.buttonContainer}>
         <Button title="CONNECT" onPress={handleConnect} loading={isLoading} disabled={isConnected} />
-        <Button title="DISCONNECT" onPress={handleDisconnect} loading={isLoading} />
+        <Button title="DISCONNECT" onPress={handleDisconnect} loading={isLoading} disabled={!isConnected} />
       </View>
       <TextInput
         value={text}
@@ -147,6 +152,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  textContainer: { margin: 10 },
+  id: { fontSize: 20 },
+  name: { fontSize: 40, color: theme.colours.red },
+  rssi: {},
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

@@ -9,6 +9,7 @@ import { Device } from 'react-native-ble-plx';
 import { useTypedSelector } from '../../../../store/store';
 import { NavigationAppStack } from '../../../navigation/AppNavigation';
 import { theme } from '../../../styles/theme';
+import ConnactedLogo from '../../../../assets/link-svgrepo-com.svg';
 
 interface Props {
   device: Device;
@@ -18,11 +19,13 @@ const DeviceCard: React.FC<Props> = ({ device, index }) => {
   const selectedDeviceIndex = useTypedSelector(({ main }) => main.selectedDeviceIndex);
   const [isConnected, setIsConnected] = useState(false);
   const { navigate } = useNavigation<NavigationAppStack<'Main'>>();
+
   useEffect(() => {
     (async () => {
       setIsConnected(await device.isConnected());
     })();
-  }, [device]);
+  }, [navigate]);
+
   return (
     <TouchableOpacity
       style={[styles.container, selectedDeviceIndex === index && styles.selected]}
@@ -30,7 +33,7 @@ const DeviceCard: React.FC<Props> = ({ device, index }) => {
     >
       <Text style={styles.id}>{`Id : ${device.id}`}</Text>
       <Text style={styles.name}>{`Name : ${device.name}`}</Text>
-      <Text style={isConnected ? styles.connected : null}>{`Is connected : ${isConnected}`}</Text>
+      {isConnected && <ConnactedLogo width={60} height={60} style={{ position: 'absolute', top: 10, right: 10 }} />}
       <Text>{`RSSI : ${device.rssi}`}</Text>
     </TouchableOpacity>
   );
@@ -38,8 +41,12 @@ const DeviceCard: React.FC<Props> = ({ device, index }) => {
 
 const styles = StyleSheet.create({
   container: {
+    // borderWidth: 1,
+    // borderColor: theme.colours.gray,
+    borderRadius: 5,
     backgroundColor: 'white',
     padding: 10,
+    margin: 5,
   },
   selected: {
     backgroundColor: theme.colours.button,

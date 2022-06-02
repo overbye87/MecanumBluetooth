@@ -27,7 +27,7 @@ const MenuButton: React.FC<Props> = ({
     <TouchableOpacity
       disabled={disabled}
       style={[styles.button, style, disabled && styles.disabled]}
-      onPress={onPress}
+      onPress={loading ? undefined : onPress}
     >
       {children}
       {loading && <ActivityIndicator size="small" color={theme.colours.buttonText} />}
