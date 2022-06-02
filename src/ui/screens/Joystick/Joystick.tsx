@@ -27,11 +27,14 @@ const Joystick: React.FC = () => {
   const selectedDeviceIndex = useTypedSelector(({ main }) => main.selectedDeviceIndex);
 
   const position = useRef<IPosition>({
-    x1: 0, y1: 0, x2: 0, y2: 0,
-    prevX1: 0, prevY1: 0, prevX2: 0, prevY2: 0,
-  });
-  const prevPosition = useRef<IPosition>({
-    x1: 0, y1: 0, x2: 0, y2: 0,
+    x1: 0,
+    y1: 0,
+    x2: 0,
+    y2: 0,
+    prevX1: 0,
+    prevY1: 0,
+    prevX2: 0,
+    prevY2: 0,
   });
 
   const send = async (device: Device, value: string) => {
@@ -49,11 +52,18 @@ const Joystick: React.FC = () => {
 
   const tick = () => {
     const {
-      x1, y1, x2, y2,
+      x1,
+      y1,
+      x2,
+      y2,
+      prevX1: x1,
+      prevY1,
+      prevX2,
+      prevY2,
     } = position.current;
 
-    if (JSON.stringify(position.current) !== JSON.stringify(prevPosition.current)) {
-      const message = `$${position.current.x1} ${position.current.y1};${position.current.x2}@${position.current.y2}!`;
+    if (x1 !== prevX1 || y1 !== prevY1 || x2 !== prevX2 || y2 !== prevY2) {
+      const message = `$${x1} ${y1};${x2}@${y2}!`;
       prevPosition.current.x1 = position.current.x1;
       prevPosition.current.y1 = position.current.y1;
       prevPosition.current.x2 = position.current.x2;
