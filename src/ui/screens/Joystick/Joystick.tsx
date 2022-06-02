@@ -94,7 +94,7 @@ const Joystick: React.FC = () => {
   console.log('render Joystick');
 
   return (
-    <SafeAreaView
+    <View
       style={styles.сontainer}
     >
       <MultiTouchJoyStick
@@ -115,7 +115,7 @@ const Joystick: React.FC = () => {
           position.current.y2 = Math.round(y * scaleFactor);
         }}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
