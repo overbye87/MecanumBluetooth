@@ -61,12 +61,8 @@ const MultiTouchJoyStick: React.FC<propsJoystick> = ({
   const rStyle = useAnimatedStyle(() => {
     return {
       transform: [
-        {
-          translateX: translateX.value,
-        },
-        {
-          translateY: translateY.value,
-        },
+        { translateX: translateX.value },
+        { translateY: translateY.value },
       ],
     };
   });

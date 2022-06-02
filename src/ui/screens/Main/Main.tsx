@@ -2,7 +2,10 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
-  Alert, PermissionsAndroid, StyleSheet, View,
+  Alert,
+  PermissionsAndroid,
+  StyleSheet,
+  View,
 } from 'react-native';
 import { BleManager } from 'react-native-ble-plx';
 import { addDevice, clearScannedDevices } from '../../../store/main/mainSlice';
@@ -25,7 +28,6 @@ const Main: React.FC = () => {
 
   const scanDevices = () => {
     setIsLoading(true);
-    navigate('DeviceList');
     manager.startDeviceScan(null, null, (error, scannedDevice) => {
       if (error) {
         Alert.alert(error.name, error.message);
@@ -45,19 +47,32 @@ const Main: React.FC = () => {
       await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
     })();
     return () => {
-      // console.log('manager.destroy');
-      // manager.destroy();
+      manager.destroy();
     };
   }, []);
 
   return (
     <View style={styles.сontainer}>
-      <BluetoothLogo style={styles.logo} width={120} height={120} />
+      <BluetoothLogo style={styles.logo} />
       {(selectedDeviceIndex !== null) && <SelectedDevice device={scannedDevices[selectedDeviceIndex]} />}
-      <Button title="JOYSTICK" onPress={() => navigate('Joystick')} />
-      <Button title={`DEVICE LIST (${scannedDevices.length})`} onPress={() => navigate('DeviceList')} disabled={!scannedDevices.length} />
-      <Button title="SCAN DEVICES" onPress={scanDevices} loading={isLoading} />
-      <Button title="CLEAR DEVICES" onPress={() => dispatch(clearScannedDevices())} />
+      <Button
+        title="JOYSTICK"
+        onPress={() => navigate('Joystick')}
+      />
+      <Button
+        title={`DEVICE LIST (${scannedDevices.length})`}
+        onPress={() => navigate('DeviceList')}
+        disabled={!scannedDevices.length}
+      />
+      <Button
+        title="SCAN DEVICES"
+        onPress={scanDevices}
+        loading={isLoading}
+      />
+      <Button
+        title="CLEAR DEVICES"
+        onPress={() => dispatch(clearScannedDevices())}
+      />
     </View>
   );
 };
@@ -71,6 +86,8 @@ const styles = StyleSheet.create({
   logo: {
     alignSelf: 'center',
     margin: 20,
+    width: 120,
+    height: 120,
   },
 });
 

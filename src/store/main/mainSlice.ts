@@ -20,8 +20,10 @@ export const mainSlice = createSlice({
     addDevice: (store, action: PayloadAction<Device>) => {
       const scannedDevice = action.payload;
       if (!store.scannedDevices.find((dev) => dev.id === scannedDevice.id)) {
-        store.scannedDevices.push(scannedDevice);
-        // if (scannedDevice.name === 'AT-09_BLE')
+        const newLength = store.scannedDevices.push(scannedDevice);
+        if (scannedDevice.name === 'AT-09_BLE') {
+          store.selectedDeviceIndex = newLength - 1;
+        }
       }
     },
     updateDevice: (store, action: PayloadAction<{ device: Device, index: number }>) => {
