@@ -21,6 +21,7 @@ export const mainSlice = createSlice({
       const scannedDevice = action.payload;
       if (!store.scannedDevices.find((dev) => dev.id === scannedDevice.id)) {
         store.scannedDevices.push(scannedDevice);
+        // if (scannedDevice.name === 'AT-09_BLE')
       }
     },
     updateDevice: (store, action: PayloadAction<{ device: Device, index: number }>) => {
