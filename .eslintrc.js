@@ -5,7 +5,7 @@ module.exports = {
   plugins: ['@typescript-eslint', 'react'],
   overrides: [
     {
-      files: ['*.ts', '*.tsx'],
+      files: ['*.ts', '*.tsx', '*.js'],
       rules: {
         'import/no-unresolved': 'off',
         'no-use-before-define': 'off',
