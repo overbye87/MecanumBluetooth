@@ -1,12 +1,15 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, {
+  useEffect, useRef, useState,
+} from 'react';
 import {
-  ActivityIndicator, Alert, SafeAreaView, StatusBar, StyleSheet, View,
+  ActivityIndicator, Alert, StyleSheet, View,
 } from 'react-native';
 import { BleError, Device } from 'react-native-ble-plx';
 import { config } from '../../../config';
 import { useTypedSelector } from '../../../store/store';
 import { toBase64 } from '../../../utils/base64';
+import Button from '../../components/Button';
 import { NavigationAppStack } from '../../navigation/AppNavigation';
 import BackButton from './components/BackButton';
 import MultiTouchJoyStick from './components/MultiTouchJoyStick';
@@ -49,6 +52,8 @@ const Joystick: React.FC = () => {
     }
   };
 
+  const scale = (n: number): number => Math.round(n * config.scaleFactor);
+
   const tick = () => {
     const {
       x1,
@@ -62,16 +67,9 @@ const Joystick: React.FC = () => {
       x2: prevX2,
       y2: prevY2,
     } = prevPosition.current;
-    // if (x1 !== prevX1 || y1 !== prevY1 || x2 !== prevX2 || y2 !== prevY2) {
-
-    if (JSON.stringify(position.current) !== JSON.stringify(prevPosition.current)) {
-      console.log('*');
-      console.log('curr', position.current);
-      console.log('prev', prevPosition.current);
-      console.log('=');
-
-      const message = `$${x1} ${y1};${x2}@${y2}!`;
-      prevPosition.current = position.current;
+    if (x1 !== prevX1 || y1 !== prevY1 || x2 !== prevX2 || y2 !== prevY2) {
+      const message = `$${scale(x1)} ${scale(y1)};${scale(x2)}@${scale(y2)}!`;
+      prevPosition.current = { ...position.current };
       if ((selectedDeviceIndex !== null) && isConnectedRef.current) {
         send(scannedDevices[selectedDeviceIndex], message);
       }
@@ -102,25 +100,12 @@ const Joystick: React.FC = () => {
     });
   }, []);
 
-  enum IndexNumbers {
-    first = 1,
-    second = 2,
-  }
-
-  const handleOnValue = (x: number, y: number, i: IndexNumbers) => {
-    console.log(x,y,i)
-    prevPosition.current[`x${i}`] = position.current[`x${i}`];
-    prevPosition.current[`y${i}`] = position.current[`y${i}`];
-    position.current[`x${i}`] = Math.round(x * config.scaleFactor);
-    position.current[`y${i}`] = Math.round(y * config.scaleFactor);
-  };
-
   return (
     <View style={styles.сontainer}>
       <MultiTouchJoyStick
         onValue={
           (x, y) => {
-            handleOnValue(x, y, IndexNumbers.first);
+            position.current = { ...position.current, x1: x, y1: y };
           }
         }
       />
@@ -128,14 +113,20 @@ const Joystick: React.FC = () => {
       <MultiTouchJoyStick
         onValue={
           (x, y) => {
-            handleOnValue(x, y, IndexNumbers.second);
+            position.current = { ...position.current, x2: x, y2: y };
           }
         }
       />
-      <BackButton
+      {/* <BackButton
         style={styles.backButton}
         onPress={() => navigate('Main')}
-      />
+      /> */}
+      <View style={styles.buttonContainer}>
+        <Button
+          title="BACK"
+          onPress={() => navigate('Main')}
+        />
+      </View>
     </View>
   );
 };
@@ -147,10 +138,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
   },
-  backButton: {
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: '100%',
     position: 'absolute',
-    bottom: 15,
-    left: 15,
+    bottom: 80,
+    left: 0,
   },
 });
 

@@ -14,6 +14,7 @@ import Button from '../../components/Button';
 import { NavigationAppStack } from '../../navigation/AppNavigation';
 import SelectedDevice from './components/SelectedDevice';
 import BluetoothLogo from '../../../assets/bluetooth-svgrepo-com.svg';
+import MechanumWheelLogo from '../../../assets/mecanum_wheel.svg';
 
 const manager = new BleManager();
 
@@ -53,11 +54,16 @@ const Main: React.FC = () => {
 
   return (
     <View style={styles.сontainer}>
-      <BluetoothLogo style={styles.logo} />
+      <BluetoothLogo style={styles.logo} width={100} height={100} />
+      <MechanumWheelLogo style={styles.mechanum} height={140} />
       {(selectedDeviceIndex !== null) && <SelectedDevice device={scannedDevices[selectedDeviceIndex]} />}
       <Button
         title="JOYSTICK"
         onPress={() => navigate('Joystick')}
+      />
+      <Button
+        title="QUADRUPED"
+        onPress={() => navigate('Quadruped')}
       />
       <Button
         title={`DEVICE LIST (${scannedDevices.length})`}
@@ -85,9 +91,11 @@ const styles = StyleSheet.create({
   },
   logo: {
     alignSelf: 'center',
-    margin: 20,
-    width: 120,
-    height: 120,
+    marginBottom: 20,
+  },
+  mechanum: {
+    alignSelf: 'center',
+    marginBottom: 20,
   },
 });
 

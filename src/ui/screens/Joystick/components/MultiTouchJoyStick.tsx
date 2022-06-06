@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { View } from 'react-native';
+import { View, LogBox } from 'react-native';
 import Animated,
 {
   runOnJS,
@@ -14,6 +14,8 @@ import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
+
+LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
 
 interface propsJoystick {
   width?: number;
@@ -45,8 +47,8 @@ const MultiTouchJoyStick: React.FC<propsJoystick> = ({
           translateY.value = event.translationY;
         }
         runOnJS(onValue)(
-          Number(((translateX.value / width) * 2).toFixed(2)),
-          Number(-((translateY.value / height) * 2).toFixed(2)),
+          Number(((translateX.value / width) * 2).toFixed(3)),
+          Number(-((translateY.value / height) * 2).toFixed(3)),
         );
       }
     },

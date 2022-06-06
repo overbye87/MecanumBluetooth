@@ -5,12 +5,14 @@ import Main from '../screens/Main/Main';
 import { DeviceList } from '../screens/DeviceList/DeviceList';
 import DeviceScreen from '../screens/Device/DeviceScreen';
 import Joystick from '../screens/Joystick/Joystick';
+import Quadruped from '../screens/Quadruped/Quadruped';
 
 export type AppStackParamList = {
   Main: undefined,
   DeviceList: undefined,
   DeviceScreen: { index: number },
   Joystick: undefined,
+  Quadruped: undefined,
 };
 
 type ScreenKeys = keyof AppStackParamList;
@@ -45,6 +47,11 @@ const AppNavigation: React.FC = () => {
           name="Joystick"
           component={Joystick}
           options={{ headerShown: false, orientation: 'landscape', statusBarHidden: true }}
+        />
+        <AppStack.Screen
+          name="Quadruped"
+          component={Quadruped}
+          options={{ headerShown: false, orientation: 'portrait_up', statusBarHidden: true }}
         />
       </AppStack.Navigator>
     </NavigationContainer>

@@ -12,7 +12,7 @@ import { theme } from '../styles/theme';
 
 type Props = {
   title?: string,
-  children?: React.ReactNode;
+  children?: React.ReactNode,
   // eslint-disable-next-line no-unused-vars
   onPress?: ((event: GestureResponderEvent) => void) | undefined,
   loading?: boolean,
@@ -21,7 +21,12 @@ type Props = {
 };
 
 const MenuButton: React.FC<Props> = ({
-  title, children, onPress, disabled, style, loading,
+  title,
+  children,
+  onPress,
+  disabled,
+  style,
+  loading,
 }) => {
   return (
     <TouchableOpacity
