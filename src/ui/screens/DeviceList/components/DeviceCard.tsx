@@ -1,15 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
-  StyleSheet,
   Text,
   TouchableOpacity,
 } from 'react-native';
 import { Device } from 'react-native-ble-plx';
 import { useTypedSelector } from '../../../../store/store';
 import { NavigationAppStack } from '../../../navigation/AppNavigation';
-import { theme } from '../../../styles/theme';
 import ConnactedLogo from '../../../../assets/link-svgrepo-com.svg';
+import { styles } from './DeviceCard.style';
 
 interface Props {
   device: Device;
@@ -38,27 +37,5 @@ const DeviceCard: React.FC<Props> = ({ device, index }) => {
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    // borderWidth: 1,
-    // borderColor: theme.colours.gray,
-    borderRadius: 5,
-    backgroundColor: 'white',
-    padding: 10,
-    margin: 5,
-  },
-  selected: {
-    backgroundColor: theme.colours.button,
-  },
-  id: {
-  },
-  name: {
-    fontSize: 20,
-  },
-  connected: {
-    color: 'darkgreen',
-  },
-});
 
 export default DeviceCard;

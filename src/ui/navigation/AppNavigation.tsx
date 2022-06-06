@@ -36,12 +36,12 @@ const AppNavigation: React.FC = () => {
         <AppStack.Screen
           name="DeviceList"
           component={DeviceList}
-          options={{ orientation: 'portrait_up' }}
+          options={{ title: 'Device list', orientation: 'portrait_up' }}
         />
         <AppStack.Screen
           name="DeviceScreen"
           component={DeviceScreen}
-          options={{ orientation: 'portrait_up' }}
+          options={{ title: 'Device', orientation: 'portrait_up' }}
         />
         <AppStack.Screen
           name="Joystick"

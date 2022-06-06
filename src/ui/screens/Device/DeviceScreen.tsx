@@ -3,7 +3,6 @@ import { useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
@@ -11,11 +10,11 @@ import { BleError, Service } from 'react-native-ble-plx';
 import { useTypedDispatch, useTypedSelector } from '../../../store/store';
 import Button from '../../components/Button';
 import { RouteAppStack } from '../../navigation/AppNavigation';
-import { base64ToHex, fromBase64, toBase64 } from '../../../utils/base64';
+import { base64ToHex, toBase64 } from '../../../utils/base64';
 import TextInput from '../../components/TextInput';
 import { setSelectedDeviceIndex } from '../../../store/main/mainSlice';
 import ConnactedLogo from '../../../assets/link-svgrepo-com.svg';
-import { theme } from '../../styles/theme';
+import { styles } from './DeviceScreen.style';
 
 const DeviceScreen: React.FC = () => {
   const { params } = useRoute<RouteAppStack<'DeviceScreen'>>();
@@ -147,19 +146,5 @@ const DeviceScreen: React.FC = () => {
 
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  textContainer: { margin: 10 },
-  id: { fontSize: 20 },
-  name: { fontSize: 40, color: theme.colours.red },
-  rssi: {},
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-});
 
 export default DeviceScreen;

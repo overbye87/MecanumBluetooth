@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { Device } from 'react-native-ble-plx';
-import { theme } from '../../../styles/theme';
+import { styles } from './SelectedDevice.style';
 
 interface Props {
   device: Device;
@@ -15,17 +15,5 @@ const SelectedDevice: React.FC<Props> = ({ device }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    minHeight: 50,
-    backgroundColor: theme.colours.green,
-    margin: 10,
-    padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 5,
-  },
-});
 
 export default SelectedDevice;

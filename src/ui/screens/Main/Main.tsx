@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import {
   Alert,
   PermissionsAndroid,
-  StyleSheet,
   View,
 } from 'react-native';
 import { BleManager } from 'react-native-ble-plx';
@@ -15,6 +14,7 @@ import { NavigationAppStack } from '../../navigation/AppNavigation';
 import SelectedDevice from './components/SelectedDevice';
 import BluetoothLogo from '../../../assets/bluetooth-svgrepo-com.svg';
 import MechanumWheelLogo from '../../../assets/mecanum_wheel.svg';
+import { styles } from './Main.style';
 
 const manager = new BleManager();
 
@@ -82,21 +82,5 @@ const Main: React.FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  сontainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'stretch',
-  },
-  logo: {
-    alignSelf: 'center',
-    marginBottom: 20,
-  },
-  mechanum: {
-    alignSelf: 'center',
-    marginBottom: 20,
-  },
-});
 
 export default Main;

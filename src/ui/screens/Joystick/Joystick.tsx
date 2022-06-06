@@ -1,9 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import React, {
-  useEffect, useRef, useState,
+  useEffect,
+  useRef,
+  useState,
 } from 'react';
 import {
-  ActivityIndicator, Alert, StyleSheet, View,
+  ActivityIndicator,
+  Alert,
+  View,
 } from 'react-native';
 import { BleError, Device } from 'react-native-ble-plx';
 import { config } from '../../../config';
@@ -11,8 +15,8 @@ import { useTypedSelector } from '../../../store/store';
 import { toBase64 } from '../../../utils/base64';
 import Button from '../../components/Button';
 import { NavigationAppStack } from '../../navigation/AppNavigation';
-import BackButton from './components/BackButton';
 import MultiTouchJoyStick from './components/MultiTouchJoyStick';
+import { styles } from './Joystick.style';
 
 interface IPosition {
   x1: number; y1: number; x2: number; y2: number;
@@ -117,10 +121,6 @@ const Joystick: React.FC = () => {
           }
         }
       />
-      {/* <BackButton
-        style={styles.backButton}
-        onPress={() => navigate('Main')}
-      /> */}
       <View style={styles.buttonContainer}>
         <Button
           title="BACK"
@@ -130,22 +130,5 @@ const Joystick: React.FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  сontainer: {
-    flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    width: '100%',
-    position: 'absolute',
-    bottom: 80,
-    left: 0,
-  },
-});
 
 export default Joystick;

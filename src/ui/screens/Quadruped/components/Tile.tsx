@@ -3,11 +3,11 @@ import {
   ActivityIndicator,
   GestureResponderEvent,
   StyleProp,
-  StyleSheet,
   TouchableOpacity,
   ViewStyle,
 } from 'react-native';
 import { theme } from '../../../styles/theme';
+import { styles } from './Tile.style';
 
 type Props = {
   onPress?: ((event: GestureResponderEvent) => void) | undefined,
@@ -53,21 +53,5 @@ Tile.defaultProps = {
   disabled: false,
   loading: false,
 };
-
-const styles = StyleSheet.create({
-  tile: {
-    minHeight: 100,
-    minWidth: 100,
-    // backgroundColor: theme.colours.button,
-    margin: 10,
-    // padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 5,
-  },
-  disabled: {
-    backgroundColor: theme.colours.gray,
-  },
-});
 
 export default Tile;
