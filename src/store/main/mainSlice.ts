@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Device } from 'react-native-ble-plx';
+import { config } from '../../config';
 import { RootState } from '../store';
 
 interface IInitial {
@@ -21,7 +22,7 @@ export const mainSlice = createSlice({
       const scannedDevice = action.payload;
       if (!store.scannedDevices.find((dev) => dev.id === scannedDevice.id)) {
         const newLength = store.scannedDevices.push(scannedDevice);
-        if (scannedDevice.name === 'AT-09_BLE') {
+        if (scannedDevice.name === config.bluetooth.name) {
           store.selectedDeviceIndex = newLength - 1;
         }
       }

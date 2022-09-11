@@ -32,6 +32,8 @@ const Main: React.FC = () => {
     setIsLoading(true);
     manager.startDeviceScan(null, null, (error, scannedDevice) => {
       if (error) {
+        manager.stopDeviceScan();
+        setIsLoading(false);
         Alert.alert(error.name, JSON.stringify(error, null, 2));
       }
       if (scannedDevice) {
@@ -51,10 +53,10 @@ const Main: React.FC = () => {
       PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
       PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
     ]);
-
+    type IKey = keyof typeof statuses;
     Object.keys(statuses).forEach((key) => {
-      if (statuses[key] !== RESULTS.GRANTED) {
-        Alert.alert('Statuses', JSON.stringify(key, null, 2));
+      if (statuses[key as IKey] !== RESULTS.GRANTED) {
+        Alert.alert(statuses[key as IKey], key);
       }
     });
   };
