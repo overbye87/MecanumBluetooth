@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import { BleManager } from 'react-native-ble-plx';
+import { PERMISSIONS, requestMultiple, RESULTS } from 'react-native-permissions';
 import { addDevice, clearScannedDevices } from '../../../store/main/mainSlice';
 import { useTypedDispatch, useTypedSelector } from '../../../store/store';
 import Button from '../../components/Button';
@@ -27,11 +28,11 @@ const Main: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const scanDevices = () => {
+  const handleScanDevices = () => {
     setIsLoading(true);
     manager.startDeviceScan(null, null, (error, scannedDevice) => {
       if (error) {
-        Alert.alert(error.name, error.message);
+        Alert.alert(error.name, JSON.stringify(error, null, 2));
       }
       if (scannedDevice) {
         dispatch(addDevice(scannedDevice));
@@ -40,13 +41,26 @@ const Main: React.FC = () => {
     setTimeout(() => {
       manager.stopDeviceScan();
       setIsLoading(false);
-    }, 5000);
+    }, 3000);
+  };
+
+  const requestPermissions = async () => {
+    const statuses = await requestMultiple([
+      PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
+      PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+      PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
+      PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
+    ]);
+
+    Object.keys(statuses).forEach((key) => {
+      if (statuses[key] !== RESULTS.GRANTED) {
+        Alert.alert('Statuses', JSON.stringify(key, null, 2));
+      }
+    });
   };
 
   useEffect(() => {
-    (async () => {
-      await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
-    })();
+    requestPermissions();
     return () => {
       manager.destroy();
     };
@@ -61,10 +75,10 @@ const Main: React.FC = () => {
         title="JOYSTICK"
         onPress={() => navigate('Joystick')}
       />
-      <Button
+      {/* <Button
         title="QUADRUPED"
         onPress={() => navigate('Quadruped')}
-      />
+      /> */}
       <Button
         title={`DEVICE LIST (${scannedDevices.length})`}
         onPress={() => navigate('DeviceList')}
@@ -72,7 +86,7 @@ const Main: React.FC = () => {
       />
       <Button
         title="SCAN DEVICES"
-        onPress={scanDevices}
+        onPress={handleScanDevices}
         loading={isLoading}
       />
       <Button
